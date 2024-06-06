@@ -1,5 +1,6 @@
 "use client";
 
+import { Card, CardContent, Typography } from '@mui/material';
 import { Vehicle } from '../types';
 
 type VehicleCardProps = {
@@ -8,10 +9,19 @@ type VehicleCardProps = {
 
 const VehicleCard = ({ vehicle }: VehicleCardProps) => {
   return (
-    <div className="border p-4">
-      <h2>{vehicle.make} {vehicle.model}</h2>
-      <p>Price: ${vehicle.price}</p>
-    </div>
+    <Card>
+      <CardContent>
+        <Typography variant="h5" component="div">
+          {vehicle.make} {vehicle.model}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Price: ${vehicle.price}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Mileage: {vehicle.mileage} miles
+        </Typography>
+      </CardContent>
+    </Card>
   );
 };
 

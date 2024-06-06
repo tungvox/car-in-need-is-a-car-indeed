@@ -1,19 +1,23 @@
 "use client";
 
 import Link from 'next/link';
+import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 
 const Navbar = () => {
   return (
-    <nav className="bg-gray-800 p-4">
-      <div className="container mx-auto flex justify-between">
-        <Link href="/" className="text-white">
-          Home
+    <AppBar position="static">
+      <Toolbar>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          Vehicle Marketplace
+        </Typography>
+        <Link href="/" passHref>
+          <Button color="inherit">Home</Button>
         </Link>
-        <Link href="/profile" className="text-white">
-          Profile
+        <Link href="/profile" passHref>
+          <Button color="inherit">Profile</Button>
         </Link>
-      </div>
-    </nav>
+      </Toolbar>
+    </AppBar>
   );
 };
 

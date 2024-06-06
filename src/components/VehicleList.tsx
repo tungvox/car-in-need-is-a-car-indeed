@@ -1,5 +1,6 @@
 "use client";
 
+import { Grid } from '@mui/material';
 import VehicleCard from './VehicleCard';
 import { Vehicle } from '../types';
 
@@ -9,11 +10,13 @@ type VehicleListProps = {
 
 const VehicleList = ({ vehicles }: VehicleListProps) => {
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <Grid container spacing={2}>
       {vehicles.map(vehicle => (
-        <VehicleCard key={vehicle.id} vehicle={vehicle} />
+        <Grid item xs={12} sm={6} md={4} key={vehicle.id}>
+          <VehicleCard vehicle={vehicle} />
+        </Grid>
       ))}
-    </div>
+    </Grid>
   );
 };
 

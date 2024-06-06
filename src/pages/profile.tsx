@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Layout from '../app/layout';
+import { Container, Typography } from '@mui/material';
 import { User } from '../types';
 
 const Profile = () => {
@@ -19,14 +19,16 @@ const Profile = () => {
   if (!user) return <div>Loading...</div>;
 
   return (
-    <Layout>
-      <h1 className="text-3xl font-bold">Profile</h1>
+    <Container>
+      <Typography variant="h4" component="h1" gutterBottom>
+        Profile
+      </Typography>
       <div>
         <p>Username: {user.username}</p>
         <p>Email: {user.email}</p>
         <p>Full Name: {user.fullname}</p>
       </div>
-    </Layout>
+    </Container>
   );
 };
 

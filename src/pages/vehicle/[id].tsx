@@ -3,7 +3,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Layout from '../../app/layout';
+import { Container, Typography } from '@mui/material';
 import { Vehicle } from '../../types';
 
 const VehicleDetail = () => {
@@ -24,13 +24,23 @@ const VehicleDetail = () => {
   if (!vehicle) return <div>Loading...</div>;
 
   return (
-    <Layout>
-      <h1 className="text-3xl font-bold">{vehicle.make} {vehicle.model}</h1>
-      <p>Price: ${vehicle.price}</p>
-      <p>Mileage: {vehicle.mileage}</p>
-      <p>Location: {vehicle.location}</p>
-      <p>Description: {vehicle.description}</p>
-    </Layout>
+    <Container>
+      <Typography variant="h4" component="h1" gutterBottom>
+        {vehicle.make} {vehicle.model}
+      </Typography>
+      <Typography variant="body1" component="p">
+        Price: ${vehicle.price}
+      </Typography>
+      <Typography variant="body1" component="p">
+        Mileage: {vehicle.mileage}
+      </Typography>
+      <Typography variant="body1" component="p">
+        Location: {vehicle.location}
+      </Typography>
+      <Typography variant="body1" component="p">
+        Description: {vehicle.description}
+      </Typography>
+    </Container>
   );
 };
 

@@ -1,5 +1,9 @@
+"use client";
+
 import './globals.css';
 import { ReactNode } from 'react';
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import theme from '../theme';
 import Navbar from '../components/Navbar';
 
 type RootLayoutProps = {
@@ -13,8 +17,11 @@ const RootLayout = ({ children }: RootLayoutProps) => {
         <title>Vehicle Marketplace</title>
       </head>
       <body>
-        <Navbar />
-        {children}
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Navbar />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
