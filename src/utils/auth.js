@@ -61,6 +61,7 @@ export const getUser = async () => {
       headers: { Authorization: `Bearer ${token}` },
       withCredentials: true,
     });
+    console.log('Fetched user data:', response.data); // Add logging
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

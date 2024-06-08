@@ -35,6 +35,9 @@ class Vehicle(db.Model):
     price = db.Column(db.Float, nullable=False)
     power = db.Column(db.Integer, nullable=False)
     fueltype = db.Column(db.String(50), nullable=False)
+    transmission = db.Column(db.String(50), nullable=False)
+    vehicletype = db.Column(db.String(50), nullable=False)
+    bodymodel = db.Column(db.String(50), nullable=False)
     location = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=True)
     dateposted = db.Column(db.DateTime, default=db.func.current_timestamp())
@@ -50,6 +53,9 @@ class Vehicle(db.Model):
             'price': self.price,
             'power': self.power,
             'fueltype': self.fueltype,
+            'transmission': self.transmission,
+            'vehicletype': self.vehicletype,
+            'bodymodel': self.bodymodel,
             'location': self.location,
             'description': self.description,
             'dateposted': self.dateposted

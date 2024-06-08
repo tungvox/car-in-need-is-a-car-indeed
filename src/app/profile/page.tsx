@@ -1,40 +1,30 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { Container, Typography } from '@mui/material';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { Container, Typography, CircularProgress, Box } from '@mui/material';
 import { useAuth } from '../../context/AuthContext';
-import { getUser } from '../../utils/auth';
 
 const Profile = () => {
-  const { user, setUser } = useAuth();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { user, isAuthenticated, loading } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await getUser();
-        setUser(response);
-        setLoading(false);
-      } catch (error) {
-        setError('Failed to fetch user');
-        setLoading(false);
-      }
-    };
-
-    if (!user) {
-      fetchUser();
-    } else {
-      setLoading(false);
+    if (!loading && !isAuthenticated) {
+      router.push('/login');
     }
-  }, [user, setUser]);
+  }, [loading, isAuthenticated, router]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <CircularProgress />
+      </Box>
+    );
   }
 
-  if (error) {
-    return <div>{error}</div>;
+  if (!isAuthenticated) {
+    return null; // Prevent rendering if not authenticated
   }
 
   return (
@@ -42,8 +32,11 @@ const Profile = () => {
       <Typography variant="h4" component="h1" gutterBottom>
         Profile
       </Typography>
-      <Typography variant="body1">Username: {user.username}</Typography>
-      <Typography variant="body1">Email: {user.email}</Typography>
+      <div>
+        <p>Username: {user?.username}</p>
+        <p>Email: {user?.email}</p>
+        <p>Full Name: {user?.fullname}</p>
+      </div>
     </Container>
   );
 };

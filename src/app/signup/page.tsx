@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Container, TextField, Button, Typography } from '@mui/material';
+import { Container, TextField, Button, Typography, Link } from '@mui/material';
 import { signup } from '../../utils/auth';
 
 const Signup = () => {
@@ -15,16 +15,10 @@ const Signup = () => {
   const handleSignup = async () => {
     try {
       await signup({ username, email, password });
-      router.push('/login');  // Redirect to login page after successful signup
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else if (typeof error === 'string') {
-        setError(error);
-      } else {
-        setError('Failed to signup due to an unknown error.');
-      }
-      console.error('Failed to signup:', error);
+      router.push('/login');  
+    } catch (error) {
+      setError('Failed to signup');
+      console.error('Failed to signup', error);
     }
   };
 
@@ -59,6 +53,9 @@ const Signup = () => {
       <Button variant="contained" color="primary" onClick={handleSignup}>
         Signup
       </Button>
+      <Typography variant="body2" component="p" gutterBottom>
+        Already have an account? <Link href="/login">Login</Link>
+      </Typography>
     </Container>
   );
 };

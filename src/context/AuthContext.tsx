@@ -45,11 +45,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    if (user) {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
-    }
+    console.log('User state updated:', user); // Add logging
+    setIsAuthenticated(!!user);
   }, [user]);
 
   return (
