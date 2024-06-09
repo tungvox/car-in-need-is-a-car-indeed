@@ -1,12 +1,17 @@
 import axios from 'axios';
 
 export const createVehicle = async (vehicleData: FormData) => {
-  const response = await axios.post('/api/vehicle', vehicleData, {
+  const response = await axios.post('/api/create-vehicle', vehicleData, {
     headers: {
       'Content-Type': 'multipart/form-data'
     },
     withCredentials: true,
   });
+  return response.data;
+};
+
+export const getVehicleMakes = async () => {
+  const response = await axios.get('/api/vehicle-makes');
   return response.data;
 };
 

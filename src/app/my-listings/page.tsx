@@ -1,35 +1,42 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Typography, Grid, CircularProgress, Box } from '@mui/material';
 import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 import VehicleList from '../../components/VehicleList';
 import { Vehicle } from '../../types';
+import { CircularProgress, Typography, Box } from '@mui/material';
 
 const MyListings = () => {
-  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [listings, setListings] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
-  const { isAuthenticated, loading: authLoading } = useAuth();
+  const { user, isAuthenticated, loading: authLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      router.push('/login');
-    } else if (isAuthenticated) {
-      const fetchMyListings = async () => {
-        try {
-          const res = await axios.get('/api/my-listings');
-          setVehicles(res.data);
-        } catch (error) {
-          console.error('Failed to fetch my listings', error);
-        } finally {
-          setLoading(false);
+    const fetchListings = async () => {
+      try {
+        const response = await axios.get('/api/my-listings', {
+          withCredentials: true,
+        });
+        setListings(response.data);
+      } catch (error: unknown) {
+        console.error('Failed to fetch listings:', error);
+        if (axios.isAxiosError(error) && error.response && error.response.status === 401) {
+          router.push('/login');
         }
-      };
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      fetchMyListings();
+    if (!authLoading) {
+      if (isAuthenticated) {
+        fetchListings();
+      } else {
+        router.push('/login');
+      }
     }
   }, [isAuthenticated, authLoading, router]);
 
@@ -42,14 +49,16 @@ const MyListings = () => {
   }
 
   return (
-    <Container>
-      <Typography variant="h4" component="h1" gutterBottom>
+    <Box>
+      <Typography variant="h4" gutterBottom>
         My Listings
       </Typography>
-      <Grid container spacing={2}>
-        <VehicleList vehicles={vehicles} />
-      </Grid>
-    </Container>
+      {listings.length > 0 ? (
+        <VehicleList vehicles={listings} />
+      ) : (
+        <Typography variant="body1">No listings found.</Typography>
+      )}
+    </Box>
   );
 };
 

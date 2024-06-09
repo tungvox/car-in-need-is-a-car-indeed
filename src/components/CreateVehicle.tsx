@@ -1,7 +1,9 @@
-import { useState } from 'react';
-import { TextField, Button, Typography, CircularProgress, Box, InputAdornment } from '@mui/material';
+"use client";
+
+import { useState, useEffect } from 'react';
+import { TextField, Button, Typography, CircularProgress, Box, InputAdornment, Autocomplete } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { createVehicle } from '../utils/api';
+import { createVehicle, getVehicleMakes } from '../utils/api';
 
 const CreateVehicle = ({ onClose }: { onClose: () => void }) => {
   const [make, setMake] = useState('');
@@ -19,7 +21,20 @@ const CreateVehicle = ({ onClose }: { onClose: () => void }) => {
   const [images, setImages] = useState<File[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [vehicleMakes, setVehicleMakes] = useState<{ make: string, models: string[] }[]>([]);
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchVehicleMakes = async () => {
+      try {
+        const makes = await getVehicleMakes();
+        setVehicleMakes(makes);
+      } catch (error) {
+        console.error('Failed to fetch vehicle makes', error);
+      }
+    };
+    fetchVehicleMakes();
+  }, []);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -47,7 +62,7 @@ const CreateVehicle = ({ onClose }: { onClose: () => void }) => {
 
       await createVehicle(formData);
       onClose();
-      router.push('/my-listings');
+      window.location.reload();
     } catch (error) {
       setError('Failed to create vehicle');
     } finally {
@@ -57,22 +72,21 @@ const CreateVehicle = ({ onClose }: { onClose: () => void }) => {
 
   return (
     <Box>
-      <Typography variant="h6" gutterBottom>
-        Create Vehicle
-      </Typography>
-      <TextField
-        label="Make"
+      <Autocomplete
+        options={vehicleMakes.map((option) => option.make)}
+        renderInput={(params) => <TextField {...params} label="Make" margin="normal" fullWidth />}
         value={make}
-        onChange={(e) => setMake(e.target.value)}
-        fullWidth
-        margin="normal"
+        onChange={(event, newValue) => {
+          setMake(newValue || '');
+          setModel('');
+        }}
       />
-      <TextField
-        label="Model"
+      <Autocomplete
+        options={make ? vehicleMakes.find((option) => option.make === make)?.models || [] : []}
+        renderInput={(params) => <TextField {...params} label="Model" margin="normal" fullWidth />}
         value={model}
-        onChange={(e) => setModel(e.target.value)}
-        fullWidth
-        margin="normal"
+        onChange={(event, newValue) => setModel(newValue || '')}
+        disabled={!make}
       />
       <TextField
         label="Year"
@@ -105,33 +119,29 @@ const CreateVehicle = ({ onClose }: { onClose: () => void }) => {
         fullWidth
         margin="normal"
       />
-      <TextField
-        label="Fuel Type"
+      <Autocomplete
+        options={['Petrol', 'Diesel', 'Electric', 'Hybrid']}
+        renderInput={(params) => <TextField {...params} label="Fuel Type" margin="normal" fullWidth />}
         value={fueltype}
-        onChange={(e) => setFuelType(e.target.value)}
-        fullWidth
-        margin="normal"
+        onChange={(event, newValue) => setFuelType(newValue || '')}
       />
-      <TextField
-        label="Transmission"
+      <Autocomplete
+        options={['Manual', 'Automatic']}
+        renderInput={(params) => <TextField {...params} label="Transmission" margin="normal" fullWidth />}
         value={transmission}
-        onChange={(e) => setTransmission(e.target.value)}
-        fullWidth
-        margin="normal"
+        onChange={(event, newValue) => setTransmission(newValue || '')}
       />
-      <TextField
-        label="Vehicle Type"
+      <Autocomplete
+        options={['Car', 'Truck', 'SUV', 'Convertible']}
+        renderInput={(params) => <TextField {...params} label="Vehicle Type" margin="normal" fullWidth />}
         value={vehicletype}
-        onChange={(e) => setVehicleType(e.target.value)}
-        fullWidth
-        margin="normal"
+        onChange={(event, newValue) => setVehicleType(newValue || '')}
       />
-      <TextField
-        label="Body Model"
+      <Autocomplete
+        options={['Sedan', 'Coupe', 'Hatchback', 'SUV']}
+        renderInput={(params) => <TextField {...params} label="Body Model" margin="normal" fullWidth />}
         value={bodymodel}
-        onChange={(e) => setBodyModel(e.target.value)}
-        fullWidth
-        margin="normal"
+        onChange={(event, newValue) => setBodyModel(newValue || '')}
       />
       <TextField
         label="Location"

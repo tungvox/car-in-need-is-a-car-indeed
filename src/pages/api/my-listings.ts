@@ -1,9 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
-import Cookies from 'js-cookie';
+import Cookies from 'cookies';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const token = Cookies.get('token');
+  const cookies = new Cookies(req, res);
+  const token = cookies.get('token');
 
   if (!token) {
     return res.status(401).json({ error: 'Unauthorized' });
@@ -15,9 +16,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        withCredentials: true,
       });
+
       res.status(200).json(response.data);
     } catch (error) {
+      console.error('Failed to fetch my listings:', error);
       res.status(500).json({ error: 'Failed to fetch my listings' });
     }
   } else {
