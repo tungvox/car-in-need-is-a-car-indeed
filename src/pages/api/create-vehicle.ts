@@ -3,7 +3,8 @@ import { parseForm } from '../../lib/parseForm';
 import axios from 'axios';
 import Cookies from 'cookies';
 import FormData from 'form-data';
-import formidable from 'formidable';
+import path from 'path';
+import fs from 'fs';
 
 export const config = {
   api: {
@@ -24,6 +25,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const { fields, files } = await parseForm(req, res);
 
       const formData = new FormData();
+
+      // Append fields to formData
       Object.keys(fields).forEach((key) => {
         const field = fields[key];
         if (field !== undefined) {
@@ -32,23 +35,27 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           } else {
             formData.append(key, field as string);
           }
+          console.log(`${key}: ${field}`); // Log field key and value
         }
       });
 
+      // Append files to formData
       if (files.images) {
         const images = Array.isArray(files.images) ? files.images : [files.images];
-        images.forEach((image, index) => {
+        images.forEach((image) => {
+          const imagePath = path.join(process.cwd(), 'backend', 'uploads', path.basename(image.filepath)); // Ensure the correct path
           formData.append(
-            `images_${index}`,
-            image.filepath,
-            image.originalFilename || `image_${index}`
+            'images',
+            fs.createReadStream(imagePath), // Use fs.createReadStream to read the file correctly
+            image.originalFilename || `image_${Date.now()}`
           );
+          console.log(`images: ${imagePath}`); // Log image path
         });
       }
 
       const response = await axios.post('http://127.0.0.1:5000/vehicle', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          ...formData.getHeaders(), // Get headers from formData to set the correct Content-Type
           Authorization: `Bearer ${token}`,
         },
         withCredentials: true,

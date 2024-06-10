@@ -60,15 +60,18 @@ const CreateVehicle = ({ onClose }: { onClose: () => void }) => {
       formData.append('description', description);
       images.forEach((image) => formData.append('images', image));
 
+      // Convert FormData entries to an array for logging
+      const formDataEntries = Array.from(formData.entries());
+      formDataEntries.forEach(entry => console.log(`${entry[0]}: ${entry[1]}`));
+
       await createVehicle(formData);
       onClose();
-      window.location.reload();
     } catch (error) {
       setError('Failed to create vehicle');
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   return (
     <Box>
@@ -164,6 +167,7 @@ const CreateVehicle = ({ onClose }: { onClose: () => void }) => {
         id="contained-button-file"
         multiple
         type="file"
+        name="images"  
         style={{ display: 'none' }}
         onChange={handleImageChange}
       />

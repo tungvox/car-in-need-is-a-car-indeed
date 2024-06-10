@@ -60,6 +60,8 @@ def create_vehicle():
     try:
         data = request.form
         user_id = get_jwt_identity()
+        
+        # Create the new vehicle instance
         new_vehicle = Vehicle(
             user_id=user_id,
             make=data['make'],
@@ -76,35 +78,48 @@ def create_vehicle():
             description=data['description']
         )
         db.session.add(new_vehicle)
-        db.session.commit()
+        db.session.commit()  # Commit to get the new_vehicle ID
+        print(f"Created vehicle with ID {new_vehicle.id}")
 
-        # Handle image upload
+        # Check if images are provided in the request
         if 'images' in request.files:
-            for image in request.files.getlist('images'):
+            images = request.files.getlist('images')
+            if not images:
+                print("No images found in request.files")
+            for image in images:
+                print(f"Processing image {image.filename}")
                 image_url = save_image(image)
-                new_image = VehicleImage(vehicle_id=new_vehicle.id, imageurl=image_url)
-                db.session.add(new_image)
-                print(f"Saved image {image_url} for vehicle {new_vehicle.id}")
+                if image_url:
+                    print(f"Image saved to {image_url}")
+                    new_image = VehicleImage(vehicle_id=new_vehicle.id, imageurl=image_url)
+                    db.session.add(new_image)
+                    print(f"Queued image {image_url} for vehicle {new_vehicle.id}")
+                else:
+                    print(f"Failed to save image {image.filename}")
+        else:
+            print("No 'images' key in request.files")
 
-        db.session.commit()
+        db.session.commit()  # Commit all the new images
+        print(f"Images committed for vehicle with ID {new_vehicle.id}")
         return jsonify(new_vehicle.to_dict()), 201
     except Exception as e:
         print(f"Error: {str(e)}")  # Debugging statement
+        db.session.rollback()
         return jsonify({'error': 'Failed to create vehicle', 'details': str(e)}), 500
 
 def save_image(image):
     try:
-        upload_dir = 'uploads'
+        upload_dir = os.path.join(os.path.dirname(__file__), '..', 'uploads')  # Ensure this points to the 'backend/uploads' directory
         if not os.path.exists(upload_dir):
             os.makedirs(upload_dir)
         filename = secure_filename(image.filename)
         filepath = os.path.join(upload_dir, filename)
         image.save(filepath)
-        print(f"Saved image to {filepath}")  # Debugging statement
+        print(f"Saved image to {filepath}")  # Debug statement
         return filepath
     except Exception as e:
         print(f"Error saving image: {str(e)}")
-        raise
+        return None  # Return None in case of error
 
 @routes.route('/messages', methods=['POST'])
 @jwt_required()
