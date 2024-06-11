@@ -103,23 +103,25 @@ def create_vehicle():
         print(f"Images committed for vehicle with ID {new_vehicle.id}")
         return jsonify(new_vehicle.to_dict()), 201
     except Exception as e:
-        print(f"Error: {str(e)}")  # Debugging statement
+        print(f"Error: {str(e)}")  
         db.session.rollback()
         return jsonify({'error': 'Failed to create vehicle', 'details': str(e)}), 500
 
 def save_image(image):
     try:
-        upload_dir = os.path.join(os.path.dirname(__file__), '..', 'uploads')  # Ensure this points to the 'backend/uploads' directory
+        upload_dir = os.path.join(os.path.dirname(__file__), 'uploads') 
         if not os.path.exists(upload_dir):
             os.makedirs(upload_dir)
         filename = secure_filename(image.filename)
         filepath = os.path.join(upload_dir, filename)
         image.save(filepath)
-        print(f"Saved image to {filepath}")  # Debug statement
-        return filepath
+        print(f"Saved image to {filepath}")  
+        return f'uploads/{filename}' 
     except Exception as e:
         print(f"Error saving image: {str(e)}")
-        return None  # Return None in case of error
+        return None  
+
+
 
 @routes.route('/messages', methods=['POST'])
 @jwt_required()
@@ -166,4 +168,5 @@ def get_my_listings():
     user_id = get_jwt_identity()
     vehicles = Vehicle.query.filter_by(user_id=user_id).all()
     return jsonify([vehicle.to_dict() for vehicle in vehicles]), 200
+
 

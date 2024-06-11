@@ -13,7 +13,14 @@ export type Vehicle = {
   bodymodel: string;
   location: string;
   description?: string;
+  images: VehicleImage[];
 };
+
+export interface VehicleImage {
+  id: number;
+  vehicle_id: number;
+  imageurl: string;
+}
 
 export interface User {
   id: number;

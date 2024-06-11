@@ -66,6 +66,7 @@ const CreateVehicle = ({ onClose }: { onClose: () => void }) => {
 
       await createVehicle(formData);
       onClose();
+      window.location.reload();
     } catch (error) {
       setError('Failed to create vehicle');
     } finally {

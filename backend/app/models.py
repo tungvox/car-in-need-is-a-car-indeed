@@ -42,6 +42,8 @@ class Vehicle(db.Model):
     description = db.Column(db.Text, nullable=True)
     dateposted = db.Column(db.DateTime, default=db.func.current_timestamp())
 
+    images = db.relationship('VehicleImage', backref='vehicle', lazy=True)
+
     def to_dict(self):
         return {
             'id': self.id,
@@ -58,7 +60,8 @@ class Vehicle(db.Model):
             'bodymodel': self.bodymodel,
             'location': self.location,
             'description': self.description,
-            'dateposted': self.dateposted
+            'dateposted': self.dateposted,
+            'images': [image.to_dict() for image in self.images]
         }
 
 class VehicleImage(db.Model):
