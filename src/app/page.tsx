@@ -38,7 +38,7 @@ const Home = () => {
   return (
     <Container>
       <Typography variant="h4" component="h1" gutterBottom>
-        Vehicle Listings
+        Cars For Sell
       </Typography>
       <Grid container spacing={2}>
         <VehicleList vehicles={vehicles} />

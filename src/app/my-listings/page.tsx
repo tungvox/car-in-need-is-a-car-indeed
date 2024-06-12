@@ -51,7 +51,7 @@ const MyListings = () => {
   return (
     <Box>
       <Typography variant="h4" gutterBottom>
-        My Listings
+        My Vehicles
       </Typography>
       {listings.length > 0 ? (
         <VehicleList vehicles={listings} />
