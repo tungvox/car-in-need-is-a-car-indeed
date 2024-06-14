@@ -12,15 +12,16 @@ const VehicleFilter = ({ onFilter }: FilterProps) => {
   const [make, setMake] = useState<string | null>(null);
   const [model, setModel] = useState<string | null>(null);
   const [year, setYear] = useState<string>('');
-  const [mileage, setMileage] = useState<[number, number]>([0, 200000]);
-  const [price, setPrice] = useState<[number, number]>([0, 100000]);
-  const [power, setPower] = useState<[number, number]>([0, 500]);
+  const [mileage, setMileage] = useState<[number, number]>([0, 500000]);
+  const [price, setPrice] = useState<[number, number]>([0, 500000]);
+  const [power, setPower] = useState<[number, number]>([0, 1500]);
   const [fueltype, setFuelType] = useState<string | null>(null);
   const [transmission, setTransmission] = useState<string | null>(null);
   const [vehicletype, setVehicleType] = useState<string | null>(null);
   const [bodymodel, setBodyModel] = useState<string | null>(null);
   const [location, setLocation] = useState<string>('');
   const [vehicleMakes, setVehicleMakes] = useState<{ make: string, models: string[] }[]>([]);
+  const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
     const fetchVehicleMakes = async () => {
@@ -32,9 +33,12 @@ const VehicleFilter = ({ onFilter }: FilterProps) => {
       }
     };
     fetchVehicleMakes();
+    setHasMounted(true);
   }, []);
 
   useEffect(() => {
+    if (!hasMounted) return;
+
     const filters = {
       make: make || '',
       model: model || '',
@@ -49,7 +53,7 @@ const VehicleFilter = ({ onFilter }: FilterProps) => {
       location,
     };
     onFilter(filters);
-  }, [make, model, year, mileage, price, power, fueltype, transmission, vehicletype, bodymodel, location]);
+  }, [make, model, year, mileage, price, power, fueltype, transmission, vehicletype, bodymodel, location, hasMounted]);
 
   const handleSliderChange = (field: string) => (event: Event, newValue: number | number[]) => {
     if (field === 'mileage') setMileage(newValue as [number, number]);
@@ -66,94 +70,137 @@ const VehicleFilter = ({ onFilter }: FilterProps) => {
 
   return (
     <Box>
-      <Autocomplete
-        options={vehicleMakes.map((option) => option.make)}
-        renderInput={(params) => <TextField {...params} label="Make" margin="normal" fullWidth />}
-        value={make}
-        onChange={(event, newValue) => {
-          setMake(newValue);
-          setModel(null); 
-        }}
-        isOptionEqualToValue={(option, value) => option === value}
-      />
-      <Autocomplete
-        options={make ? vehicleMakes.find((option) => option.make === make)?.models || [] : []}
-        renderInput={(params) => <TextField {...params} label="Model" margin="normal" fullWidth />}
-        value={model}
-        onChange={(event, newValue) => setModel(newValue)}
-        disabled={!make}
-        isOptionEqualToValue={(option, value) => option === value}
-      />
-      <TextField
-        label="Minimum Year"
-        type="text"
-        value={year}
-        onChange={handleYearChange}
-        fullWidth
-        margin="normal"
-      />
-      <Typography gutterBottom>Mileage ({mileage[0]} - {mileage[1]} km)</Typography>
-      <Slider
-        value={mileage}
-        onChange={handleSliderChange('mileage')}
-        valueLabelDisplay="auto"
-        min={0}
-        max={200000}
-        step={1000}
-      />
-      <Typography gutterBottom>Price (${price[0]} - ${price[1]})</Typography>
-      <Slider
-        value={price}
-        onChange={handleSliderChange('price')}
-        valueLabelDisplay="auto"
-        min={0}
-        max={100000}
-        step={1000}
-      />
-      <Typography gutterBottom>Power ({power[0]} - {power[1]} hp)</Typography>
-      <Slider
-        value={power}
-        onChange={handleSliderChange('power')}
-        valueLabelDisplay="auto"
-        min={0}
-        max={500}
-        step={10}
-      />
-      <Autocomplete
-        options={['Petrol', 'Diesel', 'Electric', 'Hybrid']}
-        renderInput={(params) => <TextField {...params} label="Fuel Type" margin="normal" fullWidth />}
-        value={fueltype}
-        onChange={(event, newValue) => setFuelType(newValue)}
-        isOptionEqualToValue={(option, value) => option === value}
-      />
-      <Autocomplete
-        options={['Manual', 'Automatic']}
-        renderInput={(params) => <TextField {...params} label="Transmission" margin="normal" fullWidth />}
-        value={transmission}
-        onChange={(event, newValue) => setTransmission(newValue)}
-        isOptionEqualToValue={(option, value) => option === value}
-      />
-      <Autocomplete
-        options={['Car', 'Truck', 'SUV', 'Convertible']}
-        renderInput={(params) => <TextField {...params} label="Vehicle Type" margin="normal" fullWidth />}
-        value={vehicletype}
-        onChange={(event, newValue) => setVehicleType(newValue)}
-        isOptionEqualToValue={(option, value) => option === value}
-      />
-      <Autocomplete
-        options={['Sedan', 'Coupe', 'Hatchback', 'SUV']}
-        renderInput={(params) => <TextField {...params} label="Body Model" margin="normal" fullWidth />}
-        value={bodymodel}
-        onChange={(event, newValue) => setBodyModel(newValue)}
-        isOptionEqualToValue={(option, value) => option === value}
-      />
-      <TextField
-        label="Location"
-        value={location}
-        onChange={(e) => setLocation(e.target.value)}
-        fullWidth
-        margin="normal"
-      />
+      <Box>
+        <Autocomplete
+          options={vehicleMakes.map((option) => option.make)}
+          renderInput={(params) => <TextField {...params} label="Make" margin="normal" fullWidth />}
+          value={make}
+          onChange={(event, newValue) => {
+            setMake(newValue);
+            setModel(null); // Reset the model when make changes
+          }}
+          isOptionEqualToValue={(option, value) => option === value}
+        />
+      </Box>
+      <Box>
+        <Autocomplete
+          options={make ? vehicleMakes.find((option) => option.make === make)?.models || [] : []}
+          renderInput={(params) => <TextField {...params} label="Model" margin="normal" fullWidth />}
+          value={model}
+          onChange={(event, newValue) => setModel(newValue)}
+          disabled={!make}
+          isOptionEqualToValue={(option, value) => option === value}
+        />
+      </Box>
+      <Box>
+        <TextField
+          label="Minimum Year"
+          type="text"
+          value={year}
+          onChange={handleYearChange}
+          fullWidth
+          margin="normal"
+        />
+      </Box>
+      <Box sx={{ border: '1px solid #ccc', borderRadius: 1, padding: 2, marginBottom: 2, backgroundColor: '#ffffff' }}>
+        <Typography gutterBottom>Mileage ({mileage[0]} - {mileage[1]} km)</Typography>
+        <Slider
+          value={mileage}
+          onChange={handleSliderChange('mileage')}
+          valueLabelDisplay="auto"
+          min={0}
+          max={500000}
+          step={1000}
+          sx={{
+            width: '100%',
+            '& .MuiSlider-thumb': {
+              width: 12,
+              height: 12,
+            },
+          }}
+        />
+      </Box>
+      <Box sx={{ border: '1px solid #ccc', borderRadius: 1, padding: 2, marginBottom: 2, backgroundColor: '#ffffff' }}>
+        <Typography gutterBottom>Price (${price[0]} - ${price[1]})</Typography>
+        <Slider
+          value={price}
+          onChange={handleSliderChange('price')}
+          valueLabelDisplay="auto"
+          min={0}
+          max={500000}
+          step={1000}
+          sx={{
+            width: '100%',
+            '& .MuiSlider-thumb': {
+              width: 12,
+              height: 12,
+            },
+          }}
+        />
+      </Box>
+      <Box sx={{ border: '1px solid #ccc', borderRadius: 1, padding: 2, marginBottom: 2, backgroundColor: '#ffffff' }}>
+        <Typography gutterBottom>Power ({power[0]} - {power[1]} hp)</Typography>
+        <Slider
+          value={power}
+          onChange={handleSliderChange('power')}
+          valueLabelDisplay="auto"
+          min={0}
+          max={1500}
+          step={10}
+          sx={{
+            width: '100%',
+            '& .MuiSlider-thumb': {
+              width: 12,
+              height: 12,
+            },
+          }}
+        />
+      </Box>
+      <Box>
+        <Autocomplete
+          options={['Petrol', 'Diesel', 'Electric', 'Hybrid']}
+          renderInput={(params) => <TextField {...params} label="Fuel Type" margin="normal" fullWidth />}
+          value={fueltype}
+          onChange={(event, newValue) => setFuelType(newValue)}
+          isOptionEqualToValue={(option, value) => option === value}
+        />
+      </Box>
+      <Box>
+        <Autocomplete
+          options={['Manual', 'Automatic']}
+          renderInput={(params) => <TextField {...params} label="Transmission" margin="normal" fullWidth />}
+          value={transmission}
+          onChange={(event, newValue) => setTransmission(newValue)}
+          isOptionEqualToValue={(option, value) => option === value}
+        />
+      </Box>
+      <Box>
+        <Autocomplete
+          options={['Car', 'Truck', 'SUV', 'Convertible']}
+          renderInput={(params) => <TextField {...params} label="Vehicle Type" margin="normal" fullWidth />}
+          value={vehicletype}
+          onChange={(event, newValue) => setVehicleType(newValue)}
+          isOptionEqualToValue={(option, value) => option === value}
+        />
+      </Box>
+      <Box>
+        <Autocomplete
+          options={['Sedan', 'Coupe', 'Hatchback', 'SUV']}
+          renderInput={(params) => <TextField {...params} label="Body Model" margin="normal" fullWidth />}
+          value={bodymodel}
+          onChange={(event, newValue) => setBodyModel(newValue)}
+          isOptionEqualToValue={(option, value) => option === value}
+        />
+      </Box>
+      <Box>
+        <TextField
+          label="Location"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          fullWidth
+          margin="normal"
+        />
+      </Box>
     </Box>
   );
 };

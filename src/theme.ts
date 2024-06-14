@@ -1,15 +1,42 @@
+// theme.ts
 import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
   typography: {
-    fontFamily: '"Montserrat", sans-serif',
+    fontFamily: '"IBM Plex Sans", sans-serif',
   },
   palette: {
     primary: {
-      main: '#1976d2',
+      main: 'rgb(76, 76, 76)',
     },
     secondary: {
       main: '#dc004e',
+    },
+    background: {
+      default: '#1e1e1e',
+    },
+  },
+  components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#ffffff',
+        },
+      },
+    },
+    MuiAutocomplete: {
+      styleOverrides: {
+        inputRoot: {
+          backgroundColor: '#ffffff',
+        },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#ffffff',
+        },
+      },
     },
   },
 });

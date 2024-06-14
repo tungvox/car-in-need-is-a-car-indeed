@@ -60,9 +60,9 @@ const Navbar = () => {
 
   if (loading) {
     return (
-      <AppBar position="static">
+      <AppBar position="sticky" sx={{ background: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(10px)', color: 'black' }}>
         <Toolbar>
-          <Typography variant="h6" style={{ flexGrow: 1, cursor: 'pointer' }} onClick={handleHomeClick}>
+          <Typography variant="h6" sx={{ flexGrow: 1, cursor: 'pointer', color: 'black' }} onClick={handleHomeClick}>
             Vehicle Marketplace
           </Typography>
           <CircularProgress color="inherit" size={24} />
@@ -72,14 +72,14 @@ const Navbar = () => {
   }
 
   return (
-    <AppBar position="static">
+    <AppBar position="sticky" sx={{ background: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(10px)', color: 'black' }}>
       <Toolbar>
-        <Typography variant="h6" style={{ flexGrow: 1, cursor: 'pointer' }} onClick={handleHomeClick}>
+        <Typography variant="h6" sx={{ flexGrow: 1, cursor: 'pointer', color: 'black' }} onClick={handleHomeClick}>
           Vehicle Marketplace
         </Typography>
         {isAuthenticated ? (
           <>
-            <Button color="inherit" onClick={handleSellVehicle}>
+            <Button sx={{ color: 'black' }} onClick={handleSellVehicle}>
               Sell a Vehicle
             </Button>
             <IconButton
@@ -88,7 +88,7 @@ const Navbar = () => {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleMenu}
-              color="inherit"
+              sx={{ color: 'black' }}
             >
               {user?.profilePicture ? (
                 <Avatar alt={user.username} src={user.profilePicture} />
@@ -129,7 +129,7 @@ const Navbar = () => {
           </>
         ) : (
           pathname !== '/login' && pathname !== '/signup' && (
-            <Button color="inherit" onClick={() => router.push('/login')}>
+            <Button sx={{ color: 'black' }} onClick={() => router.push('/login')}>
               Login
             </Button>
           )
