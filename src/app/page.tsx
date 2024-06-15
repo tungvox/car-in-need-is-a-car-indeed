@@ -105,9 +105,9 @@ const Home = () => {
 
   return (
     <Container>
-      <Typography variant="h4" component="h1" gutterBottom>
+      {/* <Typography variant="h4" component="h1" gutterBottom>
         Cars For Sell
-      </Typography>
+      </Typography> */}
       <Grid container spacing={2}>
         <Grid item xs={12} md={3}>
           <VehicleFilter onFilter={handleFilter} />
