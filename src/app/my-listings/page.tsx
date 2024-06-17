@@ -56,7 +56,7 @@ const MyListings = () => {
       {listings.length > 0 ? (
         <VehicleList vehicles={listings} />
       ) : (
-        <Typography variant="body1">No listings found.</Typography>
+        <Typography variant="body1">You have no listings.</Typography>
       )}
     </Box>
   );
