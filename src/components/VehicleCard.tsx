@@ -64,6 +64,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
         '&:hover': {
           transform: 'translateY(-5px)',
         },
+        height: '100%', // Ensure card takes up full height
       }}
     >
       <Carousel 

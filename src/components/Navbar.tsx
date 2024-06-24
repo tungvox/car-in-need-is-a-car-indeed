@@ -79,7 +79,7 @@ const Navbar = () => {
     marginRight: 0,
     transition: 'background-color 0.3s ease',
     '&:hover': {
-      backgroundColor: 'white', // Change to completely white when hovering
+      backgroundColor: 'white', 
     },
     '&::before, &::after': {
       content: '""',
