@@ -26,15 +26,19 @@ const VehicleFilter = ({ onFilter }: FilterProps) => {
   useEffect(() => {
     const fetchVehicleMakes = async () => {
       try {
-        const makes = await getVehicleMakes();
-        setVehicleMakes(makes);
+        const makes: { make: string; models: string[] }[] = await getVehicleMakes();
+        const sortedMakes = makes.map((make: { make: string; models: string[] }) => ({
+          ...make,
+          models: make.models.sort((a: string, b: string) => a.localeCompare(b)),
+        })).sort((a: { make: string }, b: { make: string }) => a.make.localeCompare(b.make));
+        setVehicleMakes(sortedMakes);
       } catch (error) {
         console.error('Failed to fetch vehicle makes', error);
       }
     };
     fetchVehicleMakes();
     setHasMounted(true);
-  }, []);
+  }, []);  
 
   useEffect(() => {
     if (!hasMounted) return;
@@ -66,6 +70,10 @@ const VehicleFilter = ({ onFilter }: FilterProps) => {
     if (value === '' || /^[0-9]{0,4}$/.test(value)) {
       setYear(value);
     }
+  };
+
+  const formatNumber = (number: number) => {
+    return new Intl.NumberFormat('de-DE').format(number);
   };
 
   return (
@@ -103,7 +111,7 @@ const VehicleFilter = ({ onFilter }: FilterProps) => {
         />
       </Box>
       <Box sx={{ border: '1px solid #ccc', borderRadius: 1, padding: 2, marginBottom: 2, backgroundColor: '#ffffff' }}>
-        <Typography gutterBottom>Mileage ({mileage[0]} - {mileage[1]} km)</Typography>
+        <Typography gutterBottom>Mileage ({formatNumber(mileage[0])} - {formatNumber(mileage[1])} km)</Typography>
         <Slider
           value={mileage}
           onChange={handleSliderChange('mileage')}
@@ -118,10 +126,11 @@ const VehicleFilter = ({ onFilter }: FilterProps) => {
               height: 12,
             },
           }}
+          valueLabelFormat={formatNumber}
         />
       </Box>
       <Box sx={{ border: '1px solid #ccc', borderRadius: 1, padding: 2, marginBottom: 2, backgroundColor: '#ffffff' }}>
-        <Typography gutterBottom>Price (${price[0]} - ${price[1]})</Typography>
+        <Typography gutterBottom>Price (€{formatNumber(price[0])} - €{formatNumber(price[1])})</Typography>
         <Slider
           value={price}
           onChange={handleSliderChange('price')}
@@ -136,10 +145,11 @@ const VehicleFilter = ({ onFilter }: FilterProps) => {
               height: 12,
             },
           }}
+          valueLabelFormat={formatNumber}
         />
       </Box>
       <Box sx={{ border: '1px solid #ccc', borderRadius: 1, padding: 2, marginBottom: 2, backgroundColor: '#ffffff' }}>
-        <Typography gutterBottom>Power ({power[0]} - {power[1]} hp)</Typography>
+        <Typography gutterBottom>Power ({formatNumber(power[0])} - {formatNumber(power[1])} hp)</Typography>
         <Slider
           value={power}
           onChange={handleSliderChange('power')}
@@ -154,6 +164,7 @@ const VehicleFilter = ({ onFilter }: FilterProps) => {
               height: 12,
             },
           }}
+          valueLabelFormat={formatNumber}
         />
       </Box>
       <Box>

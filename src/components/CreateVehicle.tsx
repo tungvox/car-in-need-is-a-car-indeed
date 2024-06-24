@@ -28,14 +28,19 @@ const CreateVehicle = ({ onClose }: { onClose: () => void }) => {
   useEffect(() => {
     const fetchVehicleMakes = async () => {
       try {
-        const makes = await getVehicleMakes();
-        setVehicleMakes(makes);
+        const makes: { make: string; models: string[] }[] = await getVehicleMakes();
+        const sortedMakes = makes.map((make) => ({
+          ...make,
+          models: make.models.sort(),
+        })).sort((a, b) => a.make.localeCompare(b.make));
+        setVehicleMakes(sortedMakes);
       } catch (error) {
         console.error('Failed to fetch vehicle makes', error);
       }
     };
     fetchVehicleMakes();
   }, []);
+  
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -284,7 +289,7 @@ const CreateVehicle = ({ onClose }: { onClose: () => void }) => {
         id="contained-button-file"
         multiple
         type="file"
-        name="images"  
+        name="images"
         style={{ display: 'none' }}
         onChange={handleImageChange}
       />

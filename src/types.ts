@@ -1,3 +1,9 @@
+export type VehicleImage = {
+  id: number;
+  vehicle_id: number;
+  imageurl: string;
+};
+
 export type Vehicle = {
   id: number;
   user_id: number;
@@ -14,13 +20,8 @@ export type Vehicle = {
   location: string;
   description?: string;
   images: VehicleImage[];
+  dateposted?: string; // Assuming this can be nullable
 };
-
-export interface VehicleImage {
-  id: number;
-  vehicle_id: number;
-  imageurl: string;
-}
 
 export interface User {
   id: number;
