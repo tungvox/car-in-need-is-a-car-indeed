@@ -5,6 +5,7 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { Card, CardContent, CardMedia, Typography, Box } from '@mui/material';
 import { Vehicle } from '../types';
+import styles from '../app/Carousel.module.css'; // Adjust the path as needed
 
 interface VehicleCarouselProps {
   vehicles: Vehicle[];
@@ -31,6 +32,7 @@ const VehicleCarousel: React.FC<VehicleCarouselProps> = ({ vehicles }) => {
         infinite={true}
         showDots={true}
         arrows={true}
+        dotListClass={styles.customDotList} // Applying the custom CSS class
       >
         {vehicles.map((vehicle) => {
           const firstImage = vehicle.images && vehicle.images.length > 0 ? vehicle.images[0].imageurl : '';

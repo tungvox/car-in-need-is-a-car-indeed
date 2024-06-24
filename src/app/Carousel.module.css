@@ -1,0 +1,39 @@
+.customDotList {
+    margin-bottom: 16px;
+}
+
+.carouselContainer {
+    position: relative;
+}
+
+.carouselArrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 1;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carouselContainer:hover .carouselArrow {
+    opacity: 1;
+}
+
+.customLeftArrow {
+    left: 10px;
+}
+
+.customRightArrow {
+    right: 10px;
+}
