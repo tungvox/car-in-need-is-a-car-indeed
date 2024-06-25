@@ -37,3 +37,7 @@
 .customRightArrow {
     right: 10px;
 }
+
+.carouselContainer li {
+    transform-style: flat !important;
+  }

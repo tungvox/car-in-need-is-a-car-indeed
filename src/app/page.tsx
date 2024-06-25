@@ -96,7 +96,7 @@ const Home: React.FC = () => {
   }
 
   return (
-    <Container maxWidth={false} sx={{ paddingLeft: 0, paddingRight: 0 }}>
+    <Container maxWidth={false} sx={{ paddingLeft: '0px !important', paddingRight: '0px !important' }}>
       <VehicleCarousel vehicles={newestVehicles} />
       <Grid container spacing={2}>
         <Grid item xs={12} md={3}>

@@ -71,21 +71,21 @@ const Navbar = () => {
   };
 
   const buttonStyles = {
-    color: '#1b1240',
-    backgroundColor: 'white',
+    color: 'rgba(255, 255, 0, 1)', 
+    backgroundColor: '#19324b', 
     position: 'relative',
     overflow: 'hidden',
     borderRadius: 0,
     marginRight: 0,
     transition: 'background-color 0.3s ease',
-    '&:hover': {
-      backgroundColor: 'white', 
-    },
+    // '&:hover': {
+    //   backgroundColor: 'white',
+    // },
     '&::before, &::after': {
       content: '""',
       position: 'absolute',
       backgroundColor: 'transparent',
-      borderColor: '#009fb8',
+      borderColor: 'rgba(255, 255, 0, 1)',
       transition: 'width 0.3s ease-in-out, height 0.3s ease-in-out',
     },
     '&::before': {
@@ -125,6 +125,7 @@ const Navbar = () => {
   const scrolledButtonStyles = {
     ...buttonStyles,
     backgroundColor: 'rgb(239, 239, 239)',
+    color: '#1b1240', // Reset text color on scroll
     '&:hover': {
       backgroundColor: 'white',
     },
@@ -132,9 +133,9 @@ const Navbar = () => {
 
   if (loading) {
     return (
-      <AppBar position="sticky" sx={{ background: 'white', backdropFilter: 'blur(10px)', color: 'black', boxShadow: 'none' }}>
+      <AppBar position="sticky" sx={{ background: '#19324b', backdropFilter: 'blur(10px)', color: 'rgba(255, 255, 0, 1)', boxShadow: 'none' }}>
         <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1, cursor: 'pointer', color: 'black' }} onClick={handleHomeClick}>
+          <Typography variant="h6" sx={{ flexGrow: 1, cursor: 'pointer', color: 'rgba(255, 255, 0, 1)' }} onClick={handleHomeClick}>
             Vehicle Marketplace
           </Typography>
           <CircularProgress color="inherit" size={24} />
@@ -147,15 +148,15 @@ const Navbar = () => {
     <AppBar
       position="sticky"
       sx={{
-        background: scrolled ? 'rgb(239, 239, 239)' : 'white', 
+        background: scrolled ? 'rgb(239, 239, 239)' : '#19324b', 
         backdropFilter: scrolled ? 'blur(10px)' : 'none', 
-        color: 'black',
+        color: scrolled ? 'black' : 'rgba(255, 255, 0, 1)',
         boxShadow: 'none', 
         transition: 'background 0.3s, backdrop-filter 0.3s',
       }}
     >
       <Toolbar>
-        <Typography variant="h6" sx={{ flexGrow: 1, cursor: 'pointer', color: 'black' }} onClick={handleHomeClick}>
+        <Typography variant="h6" sx={{ flexGrow: 1, cursor: 'pointer', color: scrolled ? 'black' : 'rgba(255, 255, 0, 1)' }} onClick={handleHomeClick}>
           Vehicle Marketplace
         </Typography>
         {pathname !== '/login' && pathname !== '/signup' && (
@@ -171,7 +172,7 @@ const Navbar = () => {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleMenu}
-              sx={{ color: 'black' }}
+              sx={{ color: scrolled ? 'black' : 'rgba(255, 255, 0, 1)' }}
             >
               {user?.profilePicture ? (
                 <Avatar alt={user.username} src={user.profilePicture} />

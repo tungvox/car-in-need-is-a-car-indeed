@@ -1,11 +1,12 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, Typography, Box, Chip } from '@mui/material';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import styles from '../app/Carousel.module.css'; 
+import styles from '../app/Carousel.module.css';
 import { Vehicle } from '../types';
+import { useInView } from 'react-intersection-observer';
 
 type VehicleCardProps = {
   vehicle: Vehicle;
@@ -32,19 +33,30 @@ const CustomRightArrow = ({ onClick }: { onClick?: () => void }) => (
 
 const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
   const images = vehicle.images.map((img) => `http://127.0.0.1:5000/${img.imageurl}`);
+  const { ref, inView } = useInView({
+    triggerOnce: true, // Trigger only once
+    threshold: 0.1, // Trigger when 10% of the card is visible
+  });
 
   const chipStyle = {
-    backgroundColor: '#90c',
-    color: 'white'
+    backgroundColor: '#346faa',
+    color: 'white',
+    borderRadius: '3px',
   };
 
-  const isNew = () => {
-    if (!vehicle.dateposted) return false;
-    const now = new Date();
-    const postedDate = new Date(vehicle.dateposted);
-    const diffHours = (now.getTime() - postedDate.getTime()) / (1000 * 60 * 60);
-    return diffHours <= 24;
-  };
+  const [isNew, setIsNew] = useState(false);
+
+  useEffect(() => {
+    const checkIfNew = () => {
+      if (!vehicle.dateposted) return false;
+      const now = new Date();
+      const postedDate = new Date(vehicle.dateposted);
+      const diffHours = (now.getTime() - postedDate.getTime()) / (1000 * 60 * 60);
+      return diffHours <= 24;
+    };
+
+    setIsNew(checkIfNew());
+  }, [vehicle.dateposted]);
 
   const formatDate = (dateString: string | undefined) => {
     if (!dateString) return '';
@@ -54,44 +66,49 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
 
   return (
     <Card
+      ref={ref}
       sx={{
         display: 'flex',
         flexDirection: 'column',
         borderRadius: '10px',
         overflow: 'hidden',
         boxShadow: 3,
-        transition: 'transform 0.3s ease-in-out',
+        transition: 'transform 0.3s ease-in-out, opacity 0.5s ease-in-out',
+        transform: inView ? 'translateY(0)' : 'translateY(20px)',
+        opacity: inView ? 1 : 0,
         '&:hover': {
           transform: 'translateY(-5px)',
         },
         height: '100%', // Ensure card takes up full height
+        position: 'relative', // Add this line for relative positioning
       }}
     >
-      <Carousel 
-        responsive={responsive} 
-        showDots 
-        infinite 
-        arrows 
-        containerClass={styles.carouselContainer} 
-        dotListClass={styles.customDotList} 
+      {isNew && (
+        <Chip
+          label="New 24h"
+          sx={{
+            position: 'absolute',
+            top: 8,
+            right: 8,
+            backgroundColor: 'red',
+            color: 'white',
+            zIndex: 1, // Ensure it is above other elements
+          }}
+        />
+      )}
+      <Carousel
+        responsive={responsive}
+        showDots
+        infinite
+        arrows
+        containerClass={styles.carouselContainer}
+        dotListClass={styles.customDotList}
         customLeftArrow={<CustomLeftArrow />}
         customRightArrow={<CustomRightArrow />}
       >
         {images.map((url, index) => (
           <Box key={index} sx={{ position: 'relative' }}>
             <img src={url} alt={`${vehicle.make} ${vehicle.model}`} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
-            {isNew() && (
-              <Chip 
-                label="24h" 
-                sx={{ 
-                  position: 'absolute', 
-                  top: 8, 
-                  right: 8, 
-                  backgroundColor: 'red', 
-                  color: 'white' 
-                }} 
-              />
-            )}
           </Box>
         ))}
       </Carousel>
@@ -115,7 +132,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
           <Chip label={vehicle.fueltype} sx={chipStyle} />
         </Box>
         <Box sx={{ marginTop: 'auto', textAlign: 'right' }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', color: '#007aff' }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', color: '#19324b' }}>
             {vehicle.price.toLocaleString()} €
           </Typography>
         </Box>

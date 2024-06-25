@@ -1,11 +1,16 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ChangeEvent } from 'react';
 import { TextField, Box, Autocomplete, Slider, Typography } from '@mui/material';
 import { getVehicleMakes } from '../utils/api';
 
 interface FilterProps {
   onFilter: (filters: any) => void;
+}
+
+interface VehicleMake {
+  make: string;
+  models: string[];
 }
 
 const VehicleFilter = ({ onFilter }: FilterProps) => {
@@ -20,17 +25,31 @@ const VehicleFilter = ({ onFilter }: FilterProps) => {
   const [vehicletype, setVehicleType] = useState<string | null>(null);
   const [bodymodel, setBodyModel] = useState<string | null>(null);
   const [location, setLocation] = useState<string>('');
-  const [vehicleMakes, setVehicleMakes] = useState<{ make: string, models: string[] }[]>([]);
+  const [vehicleMakes, setVehicleMakes] = useState<VehicleMake[]>([]);
   const [hasMounted, setHasMounted] = useState(false);
+
+  const commonBoxStyles = {
+    border: '1px solid #ccc',
+    borderRadius: '5px',
+    padding: 2,
+    marginBottom: 2,
+    backgroundColor: '#ffffff'
+  };
+
+  const inputContainerStyles = {
+    '& .MuiFormControl-root': {
+      borderRadius: '5px',
+    }
+  };
 
   useEffect(() => {
     const fetchVehicleMakes = async () => {
       try {
-        const makes: { make: string; models: string[] }[] = await getVehicleMakes();
-        const sortedMakes = makes.map((make: { make: string; models: string[] }) => ({
+        const makes: VehicleMake[] = await getVehicleMakes();
+        const sortedMakes = makes.map((make: VehicleMake) => ({
           ...make,
-          models: make.models.sort((a: string, b: string) => a.localeCompare(b)),
-        })).sort((a: { make: string }, b: { make: string }) => a.make.localeCompare(b.make));
+          models: make.models.sort((a, b) => a.localeCompare(b)),
+        })).sort((a, b) => a.make.localeCompare(b.make));
         setVehicleMakes(sortedMakes);
       } catch (error) {
         console.error('Failed to fetch vehicle makes', error);
@@ -38,7 +57,7 @@ const VehicleFilter = ({ onFilter }: FilterProps) => {
     };
     fetchVehicleMakes();
     setHasMounted(true);
-  }, []);  
+  }, []);
 
   useEffect(() => {
     if (!hasMounted) return;
@@ -65,7 +84,7 @@ const VehicleFilter = ({ onFilter }: FilterProps) => {
     if (field === 'power') setPower(newValue as [number, number]);
   };
 
-  const handleYearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleYearChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     if (value === '' || /^[0-9]{0,4}$/.test(value)) {
       setYear(value);
@@ -77,11 +96,11 @@ const VehicleFilter = ({ onFilter }: FilterProps) => {
   };
 
   return (
-    <Box>
-      <Box>
+    <Box sx={{ padding: '16px', marginTop: '16px', backgroundColor: '#edeff1', borderRadius: '5px', marginLeft: '10px' }}>
+      <Box sx={inputContainerStyles}>
         <Autocomplete
-          options={vehicleMakes.map((option) => option.make)}
-          renderInput={(params) => <TextField {...params} label="Make" margin="normal" fullWidth />}
+          options={vehicleMakes.map(option => option.make)}
+          renderInput={params => <TextField {...params} label="Make" margin="normal" fullWidth />}
           value={make}
           onChange={(event, newValue) => {
             setMake(newValue);
@@ -90,17 +109,17 @@ const VehicleFilter = ({ onFilter }: FilterProps) => {
           isOptionEqualToValue={(option, value) => option === value}
         />
       </Box>
-      <Box>
+      <Box sx={inputContainerStyles}>
         <Autocomplete
-          options={make ? vehicleMakes.find((option) => option.make === make)?.models || [] : []}
-          renderInput={(params) => <TextField {...params} label="Model" margin="normal" fullWidth />}
+          options={make ? vehicleMakes.find(option => option.make === make)?.models || [] : []}
+          renderInput={params => <TextField {...params} label="Model" margin="normal" fullWidth />}
           value={model}
           onChange={(event, newValue) => setModel(newValue)}
           disabled={!make}
           isOptionEqualToValue={(option, value) => option === value}
         />
       </Box>
-      <Box>
+      <Box sx={inputContainerStyles}>
         <TextField
           label="Minimum Year"
           type="text"
@@ -110,7 +129,7 @@ const VehicleFilter = ({ onFilter }: FilterProps) => {
           margin="normal"
         />
       </Box>
-      <Box sx={{ border: '1px solid #ccc', borderRadius: 1, padding: 2, marginBottom: 2, backgroundColor: '#ffffff' }}>
+      <Box sx={commonBoxStyles}>
         <Typography gutterBottom>Mileage ({formatNumber(mileage[0])} - {formatNumber(mileage[1])} km)</Typography>
         <Slider
           value={mileage}
@@ -129,7 +148,7 @@ const VehicleFilter = ({ onFilter }: FilterProps) => {
           valueLabelFormat={formatNumber}
         />
       </Box>
-      <Box sx={{ border: '1px solid #ccc', borderRadius: 1, padding: 2, marginBottom: 2, backgroundColor: '#ffffff' }}>
+      <Box sx={commonBoxStyles}>
         <Typography gutterBottom>Price (€{formatNumber(price[0])} - €{formatNumber(price[1])})</Typography>
         <Slider
           value={price}
@@ -148,7 +167,7 @@ const VehicleFilter = ({ onFilter }: FilterProps) => {
           valueLabelFormat={formatNumber}
         />
       </Box>
-      <Box sx={{ border: '1px solid #ccc', borderRadius: 1, padding: 2, marginBottom: 2, backgroundColor: '#ffffff' }}>
+      <Box sx={commonBoxStyles}>
         <Typography gutterBottom>Power ({formatNumber(power[0])} - {formatNumber(power[1])} hp)</Typography>
         <Slider
           value={power}
@@ -167,43 +186,43 @@ const VehicleFilter = ({ onFilter }: FilterProps) => {
           valueLabelFormat={formatNumber}
         />
       </Box>
-      <Box>
+      <Box sx={inputContainerStyles}>
         <Autocomplete
           options={['Petrol', 'Diesel', 'Electric', 'Hybrid']}
-          renderInput={(params) => <TextField {...params} label="Fuel Type" margin="normal" fullWidth />}
+          renderInput={params => <TextField {...params} label="Fuel Type" margin="normal" fullWidth />}
           value={fueltype}
           onChange={(event, newValue) => setFuelType(newValue)}
           isOptionEqualToValue={(option, value) => option === value}
         />
       </Box>
-      <Box>
+      <Box sx={inputContainerStyles}>
         <Autocomplete
           options={['Manual', 'Automatic']}
-          renderInput={(params) => <TextField {...params} label="Transmission" margin="normal" fullWidth />}
+          renderInput={params => <TextField {...params} label="Transmission" margin="normal" fullWidth />}
           value={transmission}
           onChange={(event, newValue) => setTransmission(newValue)}
           isOptionEqualToValue={(option, value) => option === value}
         />
       </Box>
-      <Box>
+      <Box sx={inputContainerStyles}>
         <Autocomplete
           options={['Car', 'Truck', 'SUV', 'Convertible']}
-          renderInput={(params) => <TextField {...params} label="Vehicle Type" margin="normal" fullWidth />}
+          renderInput={params => <TextField {...params} label="Vehicle Type" margin="normal" fullWidth />}
           value={vehicletype}
           onChange={(event, newValue) => setVehicleType(newValue)}
           isOptionEqualToValue={(option, value) => option === value}
         />
       </Box>
-      <Box>
+      <Box sx={inputContainerStyles}>
         <Autocomplete
           options={['Sedan', 'Coupe', 'Hatchback', 'SUV']}
-          renderInput={(params) => <TextField {...params} label="Body Model" margin="normal" fullWidth />}
+          renderInput={params => <TextField {...params} label="Body Model" margin="normal" fullWidth />}
           value={bodymodel}
           onChange={(event, newValue) => setBodyModel(newValue)}
           isOptionEqualToValue={(option, value) => option === value}
         />
       </Box>
-      <Box>
+      <Box sx={inputContainerStyles}>
         <TextField
           label="Location"
           value={location}
