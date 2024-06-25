@@ -77,6 +77,7 @@ const Navbar = () => {
     overflow: 'hidden',
     borderRadius: 0,
     marginRight: 0,
+    marginLeft: '10px',
     transition: 'background-color 0.3s ease',
     // '&:hover': {
     //   backgroundColor: 'white',
