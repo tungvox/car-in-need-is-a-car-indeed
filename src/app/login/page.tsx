@@ -30,7 +30,7 @@ const Login = () => {
     <Container>
       <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
         <Box width="100%" maxWidth={400}>
-          <Typography variant="h4" component="h1" gutterBottom>
+          <Typography sx={{color: 'white'}} variant="h4" component="h1" gutterBottom>
             Login
           </Typography>
           <form onSubmit={handleLogin}>
@@ -58,7 +58,7 @@ const Login = () => {
               </Button>
             </Box>
           </form>
-          <Typography variant="body1" component="p" style={{ marginTop: '1rem' }}>
+          <Typography variant="body1" component="p" style={{ marginTop: '1rem', color: 'white' }}>
             Don't have an account yet? <Link href="/signup">Create account</Link>
           </Typography>
         </Box>

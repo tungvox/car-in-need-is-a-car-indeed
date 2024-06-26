@@ -96,7 +96,7 @@ const VehicleFilter = ({ onFilter }: FilterProps) => {
   };
 
   return (
-    <Box sx={{ padding: '16px', marginTop: '16px', backgroundColor: '#edeff1', borderRadius: '5px', marginLeft: '10px' }}>
+    <Box sx={{ padding: '16px', marginTop: '16px', backgroundColor: '#edeff1', borderRadius: '5px', marginLeft: '10px', marginRight: '10px' }}>
       <Box sx={inputContainerStyles}>
         <Autocomplete
           options={vehicleMakes.map(option => option.make)}

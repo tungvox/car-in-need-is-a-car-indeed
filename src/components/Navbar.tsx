@@ -126,7 +126,7 @@ const Navbar = () => {
   const scrolledButtonStyles = {
     ...buttonStyles,
     backgroundColor: 'rgb(239, 239, 239)',
-    color: '#1b1240', // Reset text color on scroll
+    color: '#1b1240', 
     '&:hover': {
       backgroundColor: 'white',
     },
