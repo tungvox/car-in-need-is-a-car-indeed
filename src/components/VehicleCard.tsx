@@ -41,7 +41,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
   const chipStyle = {
     backgroundColor: '#346faa',
     color: 'white',
-    borderRadius: '3px',
+    borderRadius: '16px',
   };
 
   const [isNew, setIsNew] = useState(false);
@@ -70,7 +70,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        borderRadius: '10px',
+        borderRadius: '5px',
         overflow: 'hidden',
         boxShadow: 3,
         transition: 'transform 0.3s ease-in-out, opacity 0.5s ease-in-out',
@@ -90,9 +90,9 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
             position: 'absolute',
             top: 8,
             right: 8,
-            backgroundColor: 'red',
-            color: 'white',
-            zIndex: 1, // Ensure it is above other elements
+            backgroundColor: 'rgb(255, 255, 0)',
+            color: '#183049',
+            zIndex: 1, 
           }}
         />
       )}

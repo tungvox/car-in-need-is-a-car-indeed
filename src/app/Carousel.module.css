@@ -40,4 +40,50 @@
 
 .carouselContainer li {
     transform-style: flat !important;
-  }
+}
+
+@keyframes wave {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.newChip {
+    animation: wave 5s infinite;
+}
+
+@keyframes pageTurn {
+    0% {
+        transform: perspective(1000px) rotateY(0);
+        transform-origin: top left;
+        opacity: 1;
+    }
+
+    50% {
+        transform: perspective(1000px) rotateY(-90deg);
+        transform-origin: top left;
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: perspective(1000px) rotateY(-180deg);
+        transform-origin: top left;
+        opacity: 1;
+    }
+}
+
+.carouselImage {
+    transition: transform 0.6s ease-in-out;
+}
+
+.carouselImage.turn {
+    animation: pageTurn 0.6s forwards;
+}

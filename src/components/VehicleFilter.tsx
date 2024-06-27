@@ -32,13 +32,15 @@ const VehicleFilter = ({ onFilter }: FilterProps) => {
     border: '1px solid #ccc',
     borderRadius: '5px',
     padding: 2,
-    marginBottom: 2,
+    marginBottom: '10px',
     backgroundColor: '#ffffff'
   };
 
   const inputContainerStyles = {
     '& .MuiFormControl-root': {
       borderRadius: '5px',
+      marginTop: '0px',
+      marginBottom: '10px'
     }
   };
 
@@ -104,7 +106,7 @@ const VehicleFilter = ({ onFilter }: FilterProps) => {
           value={make}
           onChange={(event, newValue) => {
             setMake(newValue);
-            setModel(null); // Reset the model when make changes
+            setModel(null); 
           }}
           isOptionEqualToValue={(option, value) => option === value}
         />
