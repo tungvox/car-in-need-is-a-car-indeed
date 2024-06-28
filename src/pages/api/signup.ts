@@ -9,11 +9,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         const errorMessage = error.response?.data?.error || 'Failed to signup';
-        console.error('Error during signup:', errorMessage);  // Add logging
+        console.error('Error during signup:', errorMessage); 
         res.status(error.response?.status || 500).json({ error: errorMessage, details: error.response?.data });
       } else {
-        const err = error as Error;  // Assert the error as Error type
-        console.error('Error during signup:', err.message);  // Add logging
+        const err = error as Error;  
+        console.error('Error during signup:', err.message);  
         res.status(500).json({ error: err.message || 'Failed to signup' });
       }
     }
