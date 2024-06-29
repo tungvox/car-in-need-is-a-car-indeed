@@ -20,9 +20,9 @@ export const signup = async (user) => {
 export const login = async (user) => {
   try {
     const response = await axios.post('/api/login', user, { withCredentials: true });
-    Cookies.set('token', response.data.token); // Save JWT token in cookies
-    console.log('Token set in cookies:', response.data.token); // Add logging
-    return response.data.user; // Return the user data
+    Cookies.set('token', response.data.token); 
+    console.log('Token set in cookies:', response.data.token); 
+    return response.data.user; 
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const errorMessage = error.response?.data?.error || 'Failed to login';
