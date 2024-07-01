@@ -39,7 +39,7 @@ export const logout = async () => {
   try {
     await axios.post('/api/logout', {}, { withCredentials: true });
     Cookies.remove('token'); // Remove JWT token from cookies
-    console.log('Token removed from cookies'); // Add logging
+    console.log('Token removed from cookies'); 
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const errorMessage = error.response?.data?.error || 'Failed to logout';
