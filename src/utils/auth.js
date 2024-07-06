@@ -38,7 +38,7 @@ export const login = async (user) => {
 export const logout = async () => {
   try {
     await axios.post('/api/logout', {}, { withCredentials: true });
-    Cookies.remove('token'); // Remove JWT token from cookies
+    Cookies.remove('token'); 
     console.log('Token removed from cookies'); 
   } catch (error) {
     if (axios.isAxiosError(error)) {
