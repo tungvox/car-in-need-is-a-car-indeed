@@ -7,6 +7,7 @@ import VehicleList from '../components/VehicleList';
 import VehicleFilter from '../components/VehicleFilter';
 import VehicleCarousel from '../components/VehicleCarousel';
 import { Vehicle } from '../types';
+import SearchBar from '../components/SearchBar';
 
 const Home: React.FC = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -19,7 +20,7 @@ const Home: React.FC = () => {
       try {
         const res = await axios.get('/api/vehicles');
         setVehicles(res.data);
-        setFilteredVehicles(res.data);
+        setFilteredVehicles(res.data); // Initialize filtered vehicles
       } catch (error) {
         setError('Failed to fetch vehicles. Please try again.');
         console.error('Failed to fetch vehicles:', error);
@@ -31,44 +32,8 @@ const Home: React.FC = () => {
     fetchVehicles();
   }, []);
 
-  const handleFilter = (filters: any) => {
-    let filtered = vehicles;
-
-    if (filters.make) {
-      filtered = filtered.filter(vehicle => vehicle.make.toLowerCase() === filters.make.toLowerCase());
-    }
-    if (filters.model) {
-      filtered = filtered.filter(vehicle => vehicle.model.toLowerCase() === filters.model.toLowerCase());
-    }
-    if (filters.year) {
-      filtered = filtered.filter(vehicle => vehicle.year >= filters.year);
-    }
-    if (filters.mileage) {
-      filtered = filtered.filter(vehicle => vehicle.mileage >= filters.mileage[0] && vehicle.mileage <= filters.mileage[1]);
-    }
-    if (filters.price) {
-      filtered = filtered.filter(vehicle => vehicle.price >= filters.price[0] && vehicle.price <= filters.price[1]);
-    }
-    if (filters.power) {
-      filtered = filtered.filter(vehicle => vehicle.power >= filters.power[0] && vehicle.power <= filters.power[1]);
-    }
-    if (filters.fueltype) {
-      filtered = filtered.filter(vehicle => vehicle.fueltype.toLowerCase() === filters.fueltype.toLowerCase());
-    }
-    if (filters.transmission) {
-      filtered = filtered.filter(vehicle => vehicle.transmission.toLowerCase() === filters.transmission.toLowerCase());
-    }
-    if (filters.vehicletype) {
-      filtered = filtered.filter(vehicle => vehicle.vehicletype.toLowerCase() === filters.vehicletype.toLowerCase());
-    }
-    if (filters.bodymodel) {
-      filtered = filtered.filter(vehicle => vehicle.bodymodel.toLowerCase() === filters.bodymodel.toLowerCase());
-    }
-    if (filters.location) {
-      filtered = filtered.filter(vehicle => vehicle.location.toLowerCase().includes(filters.location.toLowerCase()));
-    }
-
-    setFilteredVehicles(filtered);
+  const handleFilter = (filteredVehicles: Vehicle[]) => {
+    setFilteredVehicles(filteredVehicles);
   };
 
   const newestVehicles = vehicles
@@ -97,12 +62,13 @@ const Home: React.FC = () => {
 
   return (
     <Container maxWidth={false} sx={{ paddingLeft: '0px !important', paddingRight: '0px !important' }}>
-      <VehicleCarousel vehicles={newestVehicles} />
+      {/*<VehicleCarousel vehicles={newestVehicles} />*/}
       <Grid container spacing={2}>
         <Grid item xs={12} md={3}>
-          <VehicleFilter onFilter={handleFilter} />
+          <VehicleFilter vehicles={vehicles} onFilter={handleFilter} /> {/* Pass vehicles to VehicleFilter */}
         </Grid>
         <Grid item xs={12} md={9}>
+          <SearchBar vehicles={vehicles} onFilter={handleFilter} />  {/* Pass vehicles to SearchBar */}
           <VehicleList vehicles={filteredVehicles} />
         </Grid>
       </Grid>
